@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Population Intelligence Architecture</title>
+<style>
+  :root{
+    --ink:#0f2233; --slate:#33475b; --muted:#6b7c8c; --line:#dbe3ea;
+    --paper:#ffffff; --wash:#f4f7f9;
+    --data:#2f6f8f; --signal:#3a8ea5; --ml:#4f7cac; --intel:#6b5b95;
+    --clin:#2e7d5b; --fin:#b06a2c; --act:#33475b; --loop:#8a5a9e;
+    --accent:#0f6b8c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+       color:var(--ink);background:var(--wash);line-height:1.45;}
+  .page{max-width:1180px;margin:0 auto;padding:34px 40px 60px;background:var(--paper);}
+  header{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:8px;}
+  .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:30px;margin:6px 0 4px;letter-spacing:-.01em;}
+  .sub{color:var(--muted);font-size:14.5px;max-width:820px;}
+  .tag{display:inline-block;margin-top:10px;font-size:11.5px;color:var(--slate);
+       background:var(--wash);border:1px solid var(--line);border-radius:999px;padding:4px 11px;}
+  .ctarow{margin-top:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .cta{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;text-decoration:none;
+       font-size:13.5px;font-weight:700;padding:10px 18px;border-radius:8px;transition:background .15s,transform .05s;}
+  .cta:hover{background:#0b5470;} .cta:active{transform:translateY(1px);}
+  .cta .arw{font-size:16px;line-height:1;}
+  .ctahint{font-size:12px;color:var(--muted);}
+  h2.section{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+             margin:30px 0 12px;border-top:1px solid var(--line);padding-top:16px;}
+
+  /* stack */
+  .stack{display:flex;flex-direction:column;gap:9px;}
+  .layer{display:grid;grid-template-columns:52px 1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;}
+  .lnum{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;}
+  .lbody{padding:11px 15px;}
+  .lbody .lt{font-weight:700;font-size:15px;}
+  .lbody .ld{color:var(--slate);font-size:13px;margin-top:2px;}
+  .lbody .lx{color:var(--muted);font-size:11.5px;margin-top:5px;font-style:italic;}
+  .L0 .lnum{background:var(--data)} .L1 .lnum{background:var(--signal)}
+  .L2 .lnum{background:var(--ml)} .L3 .lnum{background:var(--intel)}
+  .L5 .lnum{background:var(--act)} .L6 .lnum{background:var(--loop)}
+
+  /* dual validation keystone */
+  .keystone{border:2px solid var(--intel);border-radius:12px;background:linear-gradient(180deg,#faf8fc,#fff);
+            padding:14px 16px;margin:9px 0;}
+  .keystone .kh{display:flex;align-items:center;gap:10px;}
+  .keystone .kh .kn{width:34px;height:34px;border-radius:8px;background:var(--intel);color:#fff;
+        display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex:0 0 auto;}
+  .keystone .kh .kt{font-weight:700;font-size:15.5px;}
+  .keystone .kh .kd{color:var(--muted);font-size:12px;}
+  .dual{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+  .vbox{border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:#fff;}
+  .vbox.clin{border-top:4px solid var(--clin)} .vbox.fin{border-top:4px solid var(--fin)}
+  .vbox h4{margin:0 0 4px;font-size:13.5px;}
+  .vbox .who{font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;}
+  .vbox.clin .who{color:var(--clin)} .vbox.fin .who{color:var(--fin)}
+  .vbox ul{margin:7px 0 0;padding-left:16px;color:var(--slate);font-size:12.3px;}
+  .vbox li{margin:3px 0;}
+  .gate{text-align:center;margin-top:11px;font-size:12.5px;color:var(--slate);}
+  .gate b{color:var(--intel);}
+
+  /* loop line */
+  .loopnote{display:flex;align-items:center;gap:8px;justify-content:center;color:var(--loop);
+            font-size:12px;font-weight:600;margin:4px 0 2px;}
+
+  /* economics strip */
+  .econ{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .card{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:11px 13px;background:#fff;}
+  .card .cl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:700;}
+  .card .cv{font-size:22px;font-weight:800;margin:3px 0;color:var(--ink);}
+  .card .cs{font-size:11.5px;color:var(--slate);}
+
+  /* instances */
+  .inst{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:12.5px;background:#fff;color:var(--slate);}
+  .chip b{color:var(--ink);}
+  .chip.live{border-color:var(--clin);background:#f2f9f5;color:var(--clin);font-weight:600;}
+  .foot{margin-top:26px;border-top:1px solid var(--line);padding-top:12px;color:var(--muted);font-size:11px;}
+  .eq{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--wash);border:1px solid var(--line);
+      border-radius:7px;padding:9px 12px;font-size:12.5px;color:var(--ink);margin-top:8px;display:inline-block;}
+  @media print{body{background:#fff}.page{max-width:none;padding:0}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="eyebrow">Value-Based Population Health &bull; Reference Architecture</div>
+    <h1>Population Intelligence Architecture</h1>
+    <div class="sub">A repeatable pipeline that turns covered-lives <b>data</b> into clinical <b>intelligence</b> &mdash; archetypes that are validated in parallel by <b>clinical practitioners</b> and by the <b>business evaluating its own cost of covered lives</b>. Diabetes is the first instance; the method is condition-agnostic.</div>
+    <span class="tag">Instance 001 &mdash; Diabetes &bull; ~40,000 covered lives &rarr; 2,400 classified &rarr; 6 archetypes</span>
+    <div class="ctarow">
+      <a class="cta" href="roi-explorer.html">Open the interactive ROI Explorer <span class="arw">&rarr;</span></a>
+      <span class="ctahint">Flex investment, avoided spend, and hypertension control to see ROI live.</span>
+    </div>
+  </header>
+
+  <h2 class="section">The pipeline &mdash; data becomes intelligence</h2>
+  <div class="stack">
+    <div class="layer L0"><div class="lnum">0</div><div class="lbody">
+      <div class="lt">Covered-Lives Data Substrate</div>
+      <div class="ld">Claims, clinical (labs, vitals, meds), enrollment/eligibility, and social-need (HRSN) data for the full covered population.</div>
+      <div class="lx">Diabetes: ~40,000 covered lives &rarr; 2,800 with diabetes &rarr; 2,730 adults &ge; 25.</div>
+    </div></div>
+    <div class="layer L1"><div class="lnum">1</div><div class="lbody">
+      <div class="lt">Clinical Signal Selection</div>
+      <div class="ld">Domain experts choose the clinically significant parameters that carry meaning &mdash; the features the model is allowed to see.</div>
+      <div class="lx">Diabetes: A1c &amp; glucose, blood pressure, disease duration, comorbidity, resource/social factors.</div>
+    </div></div>
+    <div class="layer L2"><div class="lnum">2</div><div class="lbody">
+      <div class="lt">Archetype Discovery &mdash; unsupervised ML</div>
+      <div class="ld">Clustering finds like-groups on the selected signals and numbers them. Groups are sized and positioned by clinical complexity vs. population.</div>
+      <div class="lx">Diabetes: 88% of adults resolve into 6 distinct, intervenable phenotypes (330 unclassified).</div>
+    </div></div>
+    <div class="layer L3"><div class="lnum">3</div><div class="lbody">
+      <div class="lt">Intelligence Enrichment</div>
+      <div class="ld">Each archetype is given a primary goal, a matched intervention, an intensity, and a cost signature &mdash; a raw cluster becomes an actionable strategy.</div>
+      <div class="lx">e.g., High A1c &amp; Glucose &rarr; glycemic rescue &rarr; pharmacy + endocrinology (intensive).</div>
+    </div></div>
+  </div>
+
+  <h2 class="section">The keystone &mdash; dual validation</h2>
+  <div class="keystone">
+    <div class="kh"><div class="kn">4</div>
+      <div><div class="kt">Clinical &amp; Actuarial Validation Loop</div>
+      <div class="kd">Intelligence is only trusted once <i>both</i> lenses agree. Either gate can send an archetype back to Layer&nbsp;2/3.</div></div>
+    </div>
+    <div class="dual">
+      <div class="vbox clin">
+        <div class="who">Validated by &mdash; Clinical practitioners</div>
+        <h4>Does the archetype make clinical sense?</h4>
+        <ul>
+          <li>Groups are clinically distinct and coherent (face validity).</li>
+          <li>Each group is genuinely intervenable.</li>
+          <li>The assigned intervention fits the phenotype and standard of care.</li>
+          <li>Risk tiering (high vs. moderate) is defensible.</li>
+        </ul>
+      </div>
+      <div class="vbox fin">
+        <div class="who">Validated by &mdash; The business (finance / actuarial)</div>
+        <h4>Does it hold against cost of covered lives?</h4>
+        <ul>
+          <li>Total Cost of Care (TCOC) estimated per archetype.</li>
+          <li>Matched / risk-adjusted healthy comparator established.</li>
+          <li>Savings test: <i>Diabetes TCOC &minus; (Comparator + Intervention)</i>.</li>
+          <li>Break-even and ROI computed per segment.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="gate">Trusted intelligence = <b>clinically coherent</b> &nbsp;AND&nbsp; <b>economically credible</b>. The business evaluates its own spend as part of the loop.</div>
+  </div>
+
+  <h2 class="section">From intelligence to measured value</h2>
+  <div class="stack">
+    <div class="layer L5"><div class="lnum">5</div><div class="lbody">
+      <div class="lt">Targeted Action &amp; Resource Reallocation</div>
+      <div class="ld">Dollars move from broad, low-yield outreach to phenotype-specific interventions sized by population and intensity.</div>
+      <div class="lx">Diabetes: 85% of patients sit in just 3 phenotypes &mdash; where targeted investment concentrates.</div>
+    </div></div>
+    <div class="layer L6"><div class="lnum">6</div><div class="lbody">
+      <div class="lt">Prospective Measurement &amp; Learning Loop</div>
+      <div class="ld">Baseline &rarr; launch &rarr; measure &rarr; evaluate over a 3&ndash;5 year horizon (J-curve). Outcomes refine archetypes and re-open validation.</div>
+      <div class="lx">Net savings = avoided TCOC &minus; intervention cost &nbsp;&bull;&nbsp; ROI = net savings / intervention cost.</div>
+    </div></div>
+  </div>
+  <div class="loopnote">&#8630; Measurement feeds back to Layers 2&ndash;4 &mdash; the architecture is a closed learning loop, governed by the VBEC.</div>
+
+  <h2 class="section">The economics it produces (Diabetes Instance 001 &mdash; illustrative)</h2>
+  <div class="econ">
+    <div class="card"><div class="cl">Diabetes cost multiple</div><div class="cv">2.45&times;</div><div class="cs">vs. matched healthy comparator (2.3&ndash;2.6&times; cited)</div></div>
+    <div class="card"><div class="cl">Break-even</div><div class="cv">2.7%</div><div class="cs">TCOC reduction to cover a $500 PPPY intervention</div></div>
+    <div class="card"><div class="cl">Base-case ROI</div><div class="cv">84%</div><div class="cs">Enhanced primary care, 920-patient HBP cohort</div></div>
+    <div class="card"><div class="cl">Evaluation horizon</div><div class="cv">3&ndash;5 yr</div><div class="cs">Credible window; Year 1 may run flat or worse</div></div>
+  </div>
+  <div class="eq">Savings&nbsp;=&nbsp;Diabetes&nbsp;TCOC&nbsp;&minus;&nbsp;(Comparator&nbsp;TCOC&nbsp;+&nbsp;Intervention&nbsp;cost)</div>
+
+  <h2 class="section">Condition-agnostic &mdash; one method, many instances</h2>
+  <div class="inst">
+    <span class="chip live">&#10003; Instance 001 &mdash; <b>Diabetes</b> (live pilot)</span>
+    <span class="chip">Instance 002 &mdash; <b>Heart failure (CHF)</b></span>
+    <span class="chip">Instance 003 &mdash; <b>Chronic kidney disease</b></span>
+    <span class="chip">Instance 004 &mdash; <b>COPD</b></span>
+    <span class="chip">Instance 005 &mdash; <b>Oncology</b></span>
+    <span class="chip">Instance 006 &mdash; <b>Maternal health</b></span>
+  </div>
+
+  <div class="foot">
+    Governance: Value-Based Executive Committee (VBEC) authorizes signal selection, validates archetypes and interventions, approves cost inputs, and owns the outcome measurement plan. Figures shown are from the diabetes pilot deck and are planning estimates &mdash; not guaranteed savings.
+  </div>
+</div>
+</body>
+</html>
