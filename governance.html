@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Governance — Clinical · Financial · Operational</title>
+<style>
+  :root{
+    --ink:#0f2233; --slate:#33475b; --muted:#6b7c8c; --line:#dbe3ea;
+    --paper:#ffffff; --wash:#f4f7f9; --dark:#0E2A3B;
+    --clin:#2e7d5b; --fin:#b06a2c; --ops:#1C7293; --intel:#6b5b95; --accent:#0f6b8c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+       color:var(--ink);background:var(--wash);line-height:1.45;}
+  .page{max-width:1180px;margin:0 auto;padding:28px 40px 60px;background:var(--paper);}
+  header{border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:8px;}
+  .backlink{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--accent);text-decoration:none;margin-bottom:8px;}
+  .backlink:hover{text-decoration:underline;}
+  .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:30px;margin:6px 0 4px;letter-spacing:-.01em;}
+  .sub{color:var(--muted);font-size:14.5px;max-width:860px;}
+  h2.section{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+             margin:30px 0 14px;border-top:1px solid var(--line);padding-top:16px;}
+
+  /* three lenses */
+  .lenses{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+  @media(max-width:900px){.lenses{grid-template-columns:1fr}}
+  .lens{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;display:flex;flex-direction:column;}
+  .lens .cap{padding:13px 16px;color:#fff;}
+  .lens.clin .cap{background:var(--clin)} .lens.fin .cap{background:var(--fin)} .lens.ops .cap{background:var(--ops)}
+  .lens .cap .t{font-size:17px;font-weight:800;}
+  .lens .cap .q{font-size:12px;opacity:.92;font-style:italic;margin-top:2px;}
+  .lens .bd{padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+  .lens .k{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:3px;}
+  .lens .mandate{font-size:13px;color:var(--slate);}
+  .lens ul{margin:0;padding-left:16px;color:var(--slate);font-size:12.5px;}
+  .lens li{margin:3px 0;}
+  .lens .owner{font-size:12.5px;color:var(--ink);font-weight:600;}
+  .lens .owner span{font-weight:400;color:var(--slate);}
+
+  /* VBEC band */
+  .vbec{margin-top:16px;border:2px solid var(--intel);border-radius:12px;background:linear-gradient(180deg,#faf8fc,#fff);padding:16px 18px;}
+  .vbec .h{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+  .vbec .badge{background:var(--intel);color:#fff;font-weight:800;font-size:12px;letter-spacing:.08em;padding:6px 12px;border-radius:8px;}
+  .vbec .h .t{font-size:16px;font-weight:700;}
+  .vbec .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:6px;}
+  @media(max-width:900px){.vbec .grid3{grid-template-columns:1fr}}
+  .vbec .k{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--intel);margin-bottom:3px;}
+  .vbec .v{font-size:12.8px;color:var(--slate);}
+
+  /* RACI table */
+  table{border-collapse:collapse;width:100%;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:middle;}
+  thead th{background:var(--dark);color:#fff;font-size:11.5px;letter-spacing:.03em;}
+  tbody tr:nth-child(even){background:var(--wash);}
+  td.layer{font-weight:600;color:var(--ink);white-space:nowrap;}
+  td.layer .ln{display:inline-block;width:20px;height:20px;border-radius:5px;background:var(--intel);color:#fff;text-align:center;font-size:11px;font-weight:800;line-height:20px;margin-right:7px;}
+  .col-center{text-align:center;width:14%;}
+  .b{display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:6px;font-weight:800;font-size:12px;}
+  .b.A{background:var(--dark);color:#fff;}
+  .b.R{background:var(--accent);color:#fff;}
+  .b.C{background:#fff;border:1.5px solid var(--muted);color:var(--slate);}
+  .b.I{background:var(--wash);border:1px solid var(--line);color:var(--muted);}
+  .racibanner{display:flex;align-items:flex-start;gap:13px;border:1px solid var(--line);border-left:4px solid var(--intel);
+              background:#f7f5fb;border-radius:9px;padding:12px 16px;margin:0 0 14px;}
+  .racibanner .abadge{flex:0 0 auto;background:var(--intel);color:#fff;font-weight:800;font-size:12px;letter-spacing:.06em;
+              padding:6px 10px;border-radius:7px;display:flex;align-items:center;gap:7px;}
+  .racibanner .abadge .aa{background:#fff;color:var(--intel);width:20px;height:20px;line-height:20px;text-align:center;border-radius:5px;font-size:12px;}
+  .racibanner .txt{font-size:13px;color:var(--slate);}
+  .racibanner .txt b{color:var(--ink);}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:10px;font-size:12px;color:var(--slate);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+
+  /* cadence / gates */
+  .two{display:grid;grid-template-columns:1.15fr 1fr;gap:18px;}
+  @media(max-width:900px){.two{grid-template-columns:1fr}}
+  .gates{display:flex;flex-direction:column;gap:9px;}
+  .gate{display:grid;grid-template-columns:64px 1fr;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+  .gate .g{display:flex;align-items:center;justify-content:center;background:var(--intel);color:#fff;font-weight:800;font-size:13px;}
+  .gate .gb{padding:9px 12px;}
+  .gate .gt{font-weight:700;font-size:13.5px;}
+  .gate .gd{font-size:12px;color:var(--slate);margin-top:1px;}
+  .rules{border:1px solid var(--line);border-radius:9px;padding:14px 16px;background:var(--wash);}
+  .rules h4{margin:0 0 8px;font-size:13.5px;}
+  .rules ul{margin:0;padding-left:16px;font-size:12.8px;color:var(--slate);}
+  .rules li{margin:5px 0;}
+  .kill{color:var(--fin);font-weight:600;}
+
+  .note{margin-top:22px;border:1px solid var(--line);border-left:4px solid var(--ops);border-radius:8px;padding:12px 16px;background:#fff;font-size:12.8px;color:var(--slate);}
+  .note b{color:var(--ink);}
+  .foot{margin-top:26px;border-top:1px solid var(--line);padding-top:12px;color:var(--muted);font-size:11px;}
+  .foot a{color:var(--accent);text-decoration:none;} .foot a:hover{text-decoration:underline;}
+  @media print{body{background:#fff}.page{max-width:none;padding:0}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <a class="backlink" href="index.html">&larr; Back to the framework</a>
+    <div class="eyebrow">Population Intelligence Architecture &bull; Governance</div>
+    <h1>Governance: Clinical &middot; Financial &middot; Operational</h1>
+    <div class="sub">Intelligence is only trusted, and value only real, when three lenses oversee the same pipeline in parallel. Each lens owns a question; the Value-Based Executive Committee integrates their answers into go / no-go decisions.</div>
+  </header>
+
+  <h2 class="section">Three lenses, one pipeline</h2>
+  <div class="lenses">
+    <div class="lens clin">
+      <div class="cap"><div class="t">Clinical</div><div class="q">&ldquo;Is it clinically sound and safe?&rdquo;</div></div>
+      <div class="bd">
+        <div><div class="k">Mandate</div><div class="mandate">Safeguard clinical validity, patient safety, and standard of care across every archetype and intervention.</div></div>
+        <div><div class="k">Owns / signs off</div>
+          <ul>
+            <li>Signal selection is clinically meaningful</li>
+            <li>Archetypes are distinct &amp; intervenable (Gate&nbsp;A)</li>
+            <li>Intervention fits the phenotype</li>
+            <li>Risk tiering &amp; clinical outcomes / safety</li>
+          </ul>
+        </div>
+        <div class="owner">Owner: <span>Chief Medical Officer + phenotype clinical leads</span></div>
+        <div><div class="k">Key artifacts</div><div class="mandate">Clinical validation sign-off, care pathways, outcome &amp; safety dashboards.</div></div>
+      </div>
+    </div>
+    <div class="lens fin">
+      <div class="cap"><div class="t">Financial</div><div class="q">&ldquo;Does it hold against our own cost?&rdquo;</div></div>
+      <div class="bd">
+        <div><div class="k">Mandate</div><div class="mandate">Test every archetype against the cost of covered lives; ensure actuarial soundness and defensible return.</div></div>
+        <div><div class="k">Owns / signs off</div>
+          <ul>
+            <li>TCOC baseline per archetype</li>
+            <li>Matched / risk-adjusted comparator</li>
+            <li>Savings test, break-even &amp; ROI (Gate&nbsp;B)</li>
+            <li>Budget reallocation from outreach to pilot</li>
+          </ul>
+        </div>
+        <div class="owner">Owner: <span>CFO / Actuarial &amp; Finance</span></div>
+        <div><div class="k">Key artifacts</div><div class="mandate">TCOC baseline, comparator model, ROI sensitivity, reallocation memo.</div></div>
+      </div>
+    </div>
+    <div class="lens ops">
+      <div class="cap"><div class="t">Operational</div><div class="q">&ldquo;Can we deliver &amp; measure it reliably?&rdquo;</div></div>
+      <div class="bd">
+        <div><div class="k">Mandate</div><div class="mandate">Run the pipeline with data integrity and deliver &amp; measure interventions exactly as designed.</div></div>
+        <div><div class="k">Owns / signs off</div>
+          <ul>
+            <li>Data pipeline integrity &amp; privacy</li>
+            <li>Enrollment, staffing &amp; vendor / CHW mgmt</li>
+            <li>Intervention delivery fidelity</li>
+            <li>Measurement cadence &amp; data quality</li>
+          </ul>
+        </div>
+        <div class="owner">Owner: <span>Population Health Ops + Data &amp; Analytics</span></div>
+        <div><div class="k">Key artifacts</div><div class="mandate">Data lineage &amp; controls, enrollment tracker, measurement plan, run-book.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vbec">
+    <div class="h"><span class="badge">VBEC</span><div class="t">Value-Based Executive Committee &mdash; the integrating body</div></div>
+    <div class="v" style="margin-bottom:2px">Convenes the three lenses, resolves conflicts between them, and holds the go / no-go and reallocation decisions. No archetype advances a stage without VBEC ratification.</div>
+    <div class="grid3">
+      <div><div class="k">Membership</div><div class="v">Clinical, Financial, and Operational leads + an executive sponsor. Chaired operationally by the Population Health Intelligence Lead &mdash; the single accountable owner of the pipeline.</div></div>
+      <div><div class="k">Cadence</div><div class="v">Quarterly portfolio review; stage-gate approvals as archetypes progress; annual actuarial re-baseline.</div></div>
+      <div><div class="k">Decisions held</div><div class="v">Authorize signals &amp; cost inputs, ratify validated archetypes, approve reallocation, and continue / pause / retire.</div></div>
+    </div>
+  </div>
+
+  <h2 class="section">Decision rights across the pipeline</h2>
+  <div class="racibanner">
+    <span class="abadge"><span class="aa">A</span> Accountable &mdash; all layers</span>
+    <span class="txt"><b>Population Health Intelligence Lead.</b> Our RACI standard is one Accountable per layer; a single owner holds it end to end, so the table below shows only who is Responsible, Consulted, or Informed. The VBEC holds portfolio-level go / no-go at the stage gates, not per-layer accountability.</span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:34%">Pipeline layer</th>
+        <th class="col-center">Clinical</th>
+        <th class="col-center">Financial</th>
+        <th class="col-center">Operational</th>
+        <th class="col-center">VBEC</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="layer"><span class="ln">0</span>Data substrate</td><td class="col-center"><span class="b I">I</span></td><td class="col-center"><span class="b I">I</span></td><td class="col-center"><span class="b R">R</span></td><td class="col-center"><span class="b I">I</span></td></tr>
+      <tr><td class="layer"><span class="ln">1</span>Signal selection</td><td class="col-center"><span class="b R">R</span></td><td class="col-center"><span class="b C">C</span></td><td class="col-center"><span class="b C">C</span></td><td class="col-center"><span class="b I">I</span></td></tr>
+      <tr><td class="layer"><span class="ln">2</span>Archetype discovery</td><td class="col-center"><span class="b C">C</span></td><td class="col-center"><span class="b C">C</span></td><td class="col-center"><span class="b R">R</span></td><td class="col-center"><span class="b I">I</span></td></tr>
+      <tr><td class="layer"><span class="ln">3</span>Intelligence enrichment</td><td class="col-center"><span class="b R">R</span></td><td class="col-center"><span class="b R">R</span></td><td class="col-center"><span class="b C">C</span></td><td class="col-center"><span class="b I">I</span></td></tr>
+      <tr><td class="layer"><span class="ln">4</span>Dual validation</td><td class="col-center"><span class="b R">R</span></td><td class="col-center"><span class="b R">R</span></td><td class="col-center"><span class="b C">C</span></td><td class="col-center"><span class="b C">C</span></td></tr>
+      <tr><td class="layer"><span class="ln">5</span>Action &amp; reallocation</td><td class="col-center"><span class="b C">C</span></td><td class="col-center"><span class="b R">R</span></td><td class="col-center"><span class="b R">R</span></td><td class="col-center"><span class="b C">C</span></td></tr>
+      <tr><td class="layer"><span class="ln">6</span>Measurement &amp; learning</td><td class="col-center"><span class="b C">C</span></td><td class="col-center"><span class="b C">C</span></td><td class="col-center"><span class="b R">R</span></td><td class="col-center"><span class="b C">C</span></td></tr>
+    </tbody>
+  </table>
+  <div class="legend">
+    <span><span class="b R">R</span> Responsible / runs it</span>
+    <span><span class="b C">C</span> Consulted</span>
+    <span><span class="b I">I</span> Informed</span>
+    <span style="color:var(--muted)">Accountable (all layers): PHI Lead &mdash; see banner</span>
+  </div>
+
+  <h2 class="section">Cadence, stage gates &amp; continue / retire rules</h2>
+  <div class="two">
+    <div class="gates">
+      <div class="gate"><div class="g">Gate 1</div><div class="gb"><div class="gt">Validate cohorts &amp; definitions</div><div class="gd">Clinical + VBEC confirm archetypes and intervention definitions before any spend.</div></div></div>
+      <div class="gate"><div class="g">Gate 2</div><div class="gb"><div class="gt">Approve cost inputs &amp; baseline</div><div class="gd">Financial + VBEC sign off TCOC baseline, comparator, and reallocation.</div></div></div>
+      <div class="gate"><div class="g">Gate 3</div><div class="gb"><div class="gt">Launch</div><div class="gd">Operational readiness verified &mdash; enrollment, staffing, data capture, measurement plan live.</div></div></div>
+      <div class="gate"><div class="g">Gate 4</div><div class="gb"><div class="gt">Evaluate (3&ndash;5 yr)</div><div class="gd">VBEC reviews measured value against baseline; decides continue, scale, or retire.</div></div></div>
+    </div>
+    <div class="rules">
+      <h4>Continue / pause / retire criteria</h4>
+      <ul>
+        <li>Fails either validation gate &rarr; <span class="kill">returned to Layers 2&ndash;4</span> for re-clustering or re-pricing.</li>
+        <li>Enrollment or delivery fidelity below threshold &rarr; operational remediation before continuing.</li>
+        <li>Measured net value stays negative <em>past</em> the J-curve window &rarr; <span class="kill">pause or retire</span>.</li>
+        <li>Safety or equity signal &rarr; immediate clinical review, regardless of financials.</li>
+        <li>Comparator or cost assumptions drift &rarr; annual actuarial re-baseline.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Data, privacy &amp; equity.</b> Operational governance maintains data lineage, access controls, and PHI safeguards across the substrate. Clinical governance monitors that archetypes and interventions do not create or widen disparities &mdash; the &ldquo;Limited Resources&rdquo; phenotype and social-need signals are reviewed for equity impact at every stage gate.
+  </div>
+
+  <div class="foot">
+    Governance overlay for the Population Intelligence Architecture. Roles are functional, not named individuals &mdash; adapt to your org chart. &nbsp;|&nbsp;
+    <a href="index.html">Framework</a> &middot; <a href="roi-explorer.html">ROI Explorer</a>
+  </div>
+</div>
+</body>
+</html>
